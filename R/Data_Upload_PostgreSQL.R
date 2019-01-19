@@ -1,5 +1,3 @@
-# Also check: https://github.com/altay-oz/load_patstat
-
 ##############################################################################
 # Preample
 ##############################################################################
@@ -43,14 +41,18 @@ drv <- dbDriver("PostgreSQL")
 # set up connection to existing PostgreSQL database, just plug in own details
 con <- dbConnect(drv, 
                  dbname = "patstat2019",
-                 host = "127.0.0.1", port = 5432,
-                 user = "danieldb", password = "postgres2019")
+                 host = "127.0.0.1", 
+                 port = 5432,
+                 user = "danieldb", 
+                 password = "postgres2019")
 
 ##############################################################################
 # Load adittional data: 
 ##############################################################################
 
-# dataframe with all files to import plus the corresponding database
+# Dataframe with all files to import plus the corresponding database
+# NOTE: All the PATSTAT zip files need to be in the same folder, otherwise alter the path
+
 file.list <- tibble(table_id = NA,
                data = list.files(pattern = "tls.*zip") ) %>%
   mutate(data = gsub("\\.zip", "", .$data),
@@ -70,9 +72,8 @@ source("000_create_tables.R")
 ##############################################################################
 
 # Select or disselect certain rows
-include.number <- nrow(table.names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
-exclude.name <- c(#"tls231" # NOTE: Causes problems, has to be fixed another time
-                  ) # Indicate by name the tables to exclude
+include.number <- 1:nrow(table.names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
+exclude.name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
 
 # subset the table
 table.names.select <- table.names[include.number,] %>% filter(!(table_id %in% exclude.name) )
@@ -88,14 +89,6 @@ for(i in 1:nrow(table.names.select) ) {
                         )
 }
 
-
-# ### Manual selection (if wished)
-# Patstat_to_PostgreSQL(files = file.list, 
-#                       db = con,
-#                       append = TRUE,
-#                       overwrite = FALSE,
-#                       tb_pat = tibble(name = "tls906"),
-#                       tb_own = tibble(name = "person") )
 
 # ### To delete tables
 # dbRemoveTable(con, "tls906_person")
@@ -118,7 +111,7 @@ tbl(con, "tls201_appln") %>% glimpse()
 
 ### Count rows
 
-
+# TODO
 
 ##############################################################################
 # Indexing
@@ -140,7 +133,8 @@ source("000_create_foreign_key.R")
 ##############################################################################
 
 # Outsourced in this script: You however might want to run it one by one
-source("000_clustering.R")
+# source("000_clustering.R")
+# Note: Not done yet...
 
 
 ##############################################################################
