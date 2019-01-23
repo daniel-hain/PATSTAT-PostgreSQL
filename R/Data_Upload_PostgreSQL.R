@@ -46,6 +46,10 @@ con <- dbConnect(drv,
                  user = "danieldb", 
                  password = "postgres2019")
 
+
+# # pimp up memory (to save on disk if necessary, only works on windows)
+# memory.limit(10 * 10^10)
+
 ##############################################################################
 # Load adittional data: 
 ##############################################################################
