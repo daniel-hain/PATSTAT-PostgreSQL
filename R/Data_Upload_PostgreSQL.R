@@ -40,11 +40,11 @@ drv <- dbDriver("PostgreSQL")
 
 # set up connection to existing PostgreSQL database, just plug in own details
 con <- dbConnect(drv, 
-                 dbname = "patstat2019",
+                 dbname = "patstat2018",
                  host = "127.0.0.1", 
                  port = 5432,
-                 user = "danieldb", 
-                 password = "postgres2019")
+                 user = "YOURNAME", 
+                 password = "YOURPASSWORD")
 
 
 # # pimp up memory (to save on disk if necessary, only works on windows)
