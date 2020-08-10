@@ -14,15 +14,16 @@ graphics.off()
 require(rstudioapi); setwd(dirname(rstudioapi::getActiveDocumentContext()$path)); getwd()
 
 ### Load packages (maybe need to be installed first)
-# Standard
-library(tidyverse) # General DS toolkit
-library(magrittr) # For advanced piping
-library(data.table) # for fast fread and other fast data transformations
-
-# Databases
-library(DBI) # GEneral R database interface
-library(RPostgreSQL) # PostgreSQL interface driver
-library(dbplyr) # for dplyr with databases
+library(pacman) # installs package if necessary
+p_load(# Standard
+        tidyverse,   # General DS toolkit
+        magrittr,    # For advanced piping
+        data.table,  # for fast fread and other fast data transformations
+       # Databases
+        DBI,         # General R database interface
+        RPostgreSQL, # PostgreSQL interface driver
+        dbplyr       # for dplyr with databases
+       )
 
 ##############################################################################
 # Define functions
@@ -40,7 +41,7 @@ drv <- dbDriver("PostgreSQL")
 
 # set up connection to existing PostgreSQL database, just plug in own details
 con <- dbConnect(drv, 
-                 dbname = "patstat2018",
+                 dbname = "patstat_global",
                  host = "127.0.0.1", 
                  port = 5432,
                  user = "YOURNAME", 
