@@ -16,6 +16,7 @@ tls216,appln_contn,application continuation
 tls222,appln_jp_class,japanese classification 
 tls223,appln_docus,us classification 
 tls224,appln_cpc,cooperative patent classification 
+tls225,docdb_fam_cpc,cooperative patent classification by docdb family
 tls226,person_orig,unmodified person data 
 tls227,pers_publn,link between person and publication 
 tls228,docdb_fam_citn,citation between docdb families 
