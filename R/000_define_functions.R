@@ -21,12 +21,12 @@ Patstat_to_PostgreSQL <- function(files,
   
   for(i in 1:length(index)) {
     path_zip <- paste0(index[i],".zip")
-    path_txt <- paste0(index[i],".txt")
+    path_csv <- paste0(index[i],".csv")
     
     # unzip file, load in R, delete unziped file
     print(paste("Unzipping and loading dataframe", i, "of", length(index), sep = " ") ) 
-    unzip(path_zip, files = path_txt)
-    x <- fread(path_txt, 
+    unzip(path_zip, files = path_csv)
+    x <- fread(path_csv, 
                header = TRUE, 
                sep = ",", 
 #               dec = ".",
@@ -41,7 +41,7 @@ Patstat_to_PostgreSQL <- function(files,
                fill = FALSE, 
                blank.lines.skip = FALSE
                )
-    file.remove(path_txt)
+    file.remove(path_csv)
     
     # write in db
     print(paste("Dataframe", i, "loading in the database", sep = " ")) 
@@ -53,7 +53,7 @@ Patstat_to_PostgreSQL <- function(files,
                  row.names = FALSE)
     
     # remove leftover files
-    rm(x, path_zip, path_txt)
+    rm(x, path_zip, path_csv)
   }
   print(paste("Upload of table", tb_name, "with", length(index), "sepperate zip files complete", sep = " ") ) 
   print(paste("=============================================" )  )
