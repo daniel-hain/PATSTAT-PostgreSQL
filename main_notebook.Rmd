@@ -3,3 +3,207 @@ title: "Patstat to Postgre SQL Database"
 output: html_notebook
 ---
 
+# Setup
+
+```{r}
+### general options
+Sys.setenv(LANG = "en")
+options("scipen" = 100, "digits" = 4) # override R's tendency to use scientific notation
+
+### Clean workspace
+rm(list=ls())
+graphics.off()
+
+### setWD (maybe needs installation of rstudioapi package)
+# require(rstudioapi); setwd(dirname(rstudioapi::getActiveDocumentContext()$path)); getwd()
+
+### Load packages (maybe need to be installed first)
+# Standard
+library(tidyverse) # General DS toolkit
+library(magrittr) # For advanced piping
+library(data.table) # for fast fread and other fast data transformations
+
+# Databases
+library(DBI) # GEneral R database interface
+library(RPostgreSQL) # PostgreSQL interface driver
+library(dbplyr) # for dplyr with databases
+```
+
+```{r}
+# Outsourced in this script
+source("000_define_functions.R")
+```
+
+# Preamble
+
+## Define variables
+
+First, we set up some variables, so the script runs on its own
+
+```{r}
+# # Database access
+# var_dbname = "YOURDATABASE"
+# var_host = "127.0.0.1"
+# var_port = 5432
+# var_user = "YOURNAME"
+# var_password = "YOURPASSWORD"
+```
+
+```{r}
+# PATSTAT folder
+# var_folder = "YORUDRIVE/YOURFOLDER"
+```
+
+
+
+## Connect to database
+
+```{r}
+# Database access
+var_dbname = "patentdb"
+var_host = "130.225.57.105"
+var_port = 5432
+var_user = "patentdbowner"
+var_password = "e6rKPT2iZ99"
+```
+
+```{r}
+# define driver
+drv <- dbDriver("PostgreSQL")
+
+# set up connection to existing PostgreSQL database, just plug in own details
+con <- dbConnect(drv, 
+                 dbname = var_dbname,
+                 host = var_host, 
+                 port = var_port,
+                 user = var_user, 
+                 password = var_password
+                 )
+```
+
+
+## Load adittional data: 
+
+```{r}
+table_names <- read_csv("data/PATSTAT_table_description.csv")
+```
+
+
+```{r}
+# Dataframe with all files to import plus the corresponding database
+# NOTE: All the PATSTAT zip files need to be in the same folder, otherwise alter the path
+
+
+```
+
+
+```{r}
+# Create a temporary folder to extract the zip files
+dir.create('data/temp')
+
+# List the files to extract
+temp_files <- list.files(path = var_folder, pattern = 'data.*zip')
+
+# Extract the files
+for(i in 1:length(temp_files)){
+  unzip(paste(var_folder, temp_files[i], sep = '/'), exdir = 'data/temp')
+}
+
+rm(temp_files)
+```
+
+
+
+
+
+
+
+
+```{r}
+file_list <- tibble(table_id = NA,
+               data = list.files(path = var_folder, pattern = "data.*zip") ) %>%
+  mutate(data = gsub("\\.zip", "", .$data),
+         table_id = gsub("\\_.*", "", .$data) )
+```
+
+```{r}
+# Select or disselect certain rows
+include_number <- 1:nrow(table_names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
+exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
+
+# subset the table
+table_names_select <- table_names[include_number,] %>% filter(!(table_id %in% exclude_name) )
+rm(include_number, exclude_name)
+```
+
+
+
+
+
+```{r}
+data <- read_csv(
+  file = 'data/temp/tls201_part01.zip',
+  col_names = TRUE,
+  na = c("", "NA"),
+  quoted_na = TRUE,
+  trim_ws = FALSE,
+  guess_max = 5000,
+  progress = show_progress(),
+  skip_empty_rows = TRUE
+)
+```
+
+
+```{r}
+data2 <- read_csv(
+  file = 'data/temp/tls201_part02.zip',
+  col_names = TRUE,
+  na = c("", "NA"),
+  quoted_na = TRUE,
+  trim_ws = FALSE,
+  guess_max = 5000,
+  progress = show_progress(),
+  skip_empty_rows = TRUE
+)
+```
+
+
+##############################################################################
+# Load to PostgreSQ
+##############################################################################
+
+# Select or disselect certain rows
+include_number <- 1:nrow(table.names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
+exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
+# subset the table
+table_names_select <- table_names[include_number,] %>% filter(!(table_id %in% exclude_name) )
+
+# This loop imports all tables to the PostgreSQL database. You can instead also run the function sepperate for the tables
+for(i in 1:nrow(table_names_select) ) {
+  Patstat_to_PostgreSQL(files = file_list, 
+                        db = con,
+                        append = TRUE,
+                        overwrite = FALSE,
+                        tb_pat = table_names_select[i, "table_id"],
+                        tb_own = table_names_select[i, "name"]
+                        )
+}
+
+  # First check if everything is fine with input
+  tb_pat %<>% pull()
+  tb_own  %<>% pull()
+  
+  # Generate table name and subset index
+  tb_name = paste(tb_pat, tb_own, sep = "_")
+  index <- files %>%
+    filter(table_id == tb_pat) %>%
+    pull(data) 
+    
+  
+
+
+
+
+
+
+
