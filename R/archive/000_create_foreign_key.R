@@ -84,12 +84,11 @@ dbExecute(con,"
           ALTER TABLE tls224_appln_cpc ADD FOREIGN KEY (appln_id) REFERENCES tls201_appln(appln_id);
           ")
 
-# ##### tls226_person_orig
-# # Note: Table redundant
-# dbExecute(con,"
-#           ALTER TABLE tls226_person_orig ADD FOREIGN KEY (person_id) REFERENCES tls906_person(person_id);
-#           ALTER TABLE tls226_person_orig ADD FOREIGN KEY (person_id) REFERENCES tls206_person(person_id);
-#           ")
+##### tls226_person_orig
+dbExecute(con,"
+          ALTER TABLE tls226_person_orig ADD FOREIGN KEY (person_id) REFERENCES tls906_person(person_id);
+          ALTER TABLE tls226_person_orig ADD FOREIGN KEY (person_id) REFERENCES tls206_person(person_id);
+          ")
 
 ##### tls227_pers_publn
 dbExecute(con,"

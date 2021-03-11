@@ -5,9 +5,20 @@
 ##### tls201_appln
 dbExecute(con,"
   CREATE INDEX tls_201_appln_auth ON tls201_appln (appln_auth);
+  CREATE INDEX tls_201_appln_nr ON tls201_appln (appln_nr);
   CREATE INDEX tls_201_appln_kind ON tls201_appln (appln_kind);
   CREATE INDEX tls_201_appln_filing_year ON tls201_appln (appln_filing_year);
+  CREATE INDEX tls_201_appln_nr_epodoc ON tls201_appln (appln_nr_epodoc);
+  CREATE INDEX tls_201_appln_nr_original ON tls201_appln (appln_nr_original);                      
   CREATE INDEX tls_201_appln_ipr_type ON tls201_appln (ipr_type);
+  CREATE INDEX tls_201_appln_internat_appln_id ON tls201_appln (internat_appln_id);
+  CREATE INDEX tls_201_appln_int_phase ON tls201_appln (int_phase);
+  CREATE INDEX tls_201_appln_reg_phase ON tls201_appln (reg_phase);
+  CREATE INDEX tls_201_appln_nat_phase ON tls201_appln (nat_phase);
+  CREATE INDEX tls_201_appln_earliest_filing_year ON tls201_appln (earliest_filing_year);
+  CREATE INDEX tls_201_appln_earliest_filing_id ON tls201_appln (earliest_filing_id);
+  CREATE INDEX tls_201_appln_earliest_publn_year ON tls201_appln (earliest_publn_year);
+  CREATE INDEX tls_201_appln_earliest_pat_publn_id ON tls201_appln (earliest_pat_publn_id);
   CREATE INDEX tls_201_granted ON tls201_appln (granted);           
   CREATE INDEX tls_201_appln_docdb_family_id ON tls201_appln (docdb_family_id);                      
   CREATE INDEX tls_201_appln_inpadoc_family_id ON tls201_appln (inpadoc_family_id);
@@ -25,16 +36,17 @@ dbExecute(con, "
 
 ##### tls204_appln_prior
 dbExecute(con,"
- CREATE INDEX tls204_appln_id ON tls204_appln_prior (appln_id);
- CREATE INDEX tls204_prior_appln_id ON tls204_appln_prior (prior_appln_id);
+  CREATE INDEX tls204_appln_id ON tls204_appln_prior (appln_id);
+  CREATE INDEX tls204_prior_appln_id ON tls204_appln_prior (prior_appln_id);
 ")
 
 ##### tls205_appln_id
 dbExecute(con, "
   CREATE INDEX tls205_appln_id ON tls205_tech_rel (appln_id);
+  CREATE INDEX tls205_tech_rel_appln_id ON tls205_tech_rel (tech_rel_appln_id);
 ")
 
-##### tls206_person
+##### tls206_person: NOTE: Redundant, since all the fino is already in tls227_pers_publn
 dbExecute(con,"
   CREATE INDEX tls206_person_id ON tls206_person (person_id);
   CREATE INDEX tls206_person_ctry_code ON tls206_person (person_ctry_code);
@@ -43,10 +55,14 @@ dbExecute(con,"
 ##### tls207_pers_appln
 dbExecute(con,"
   CREATE INDEX tls207_person_id ON tls207_pers_appln (person_id);
+  CREATE INDEX tls207_appln_id ON tls207_pers_appln (appln_id);
+  CREATE INDEX tls207_applt_seq_nr ON tls207_pers_appln (applt_seq_nr);
+  CREATE INDEX tls207_invt_seq_nr ON tls207_pers_appln (invt_seq_nr);
 ")
 
 ##### tls209_appln_ipc
 dbExecute(con,"
+  CREATE INDEX tls209_appln_id ON tls209_appln_ipc (appln_id);
   CREATE INDEX tls209_ipc_class_symbol ON tls209_appln_ipc (ipc_class_symbol);
 ")
 
@@ -106,9 +122,6 @@ CREATE INDEX tls224_cpc_class_symbol ON tls224_appln_cpc (cpc_class_symbol);
 CREATE INDEX tls224_cpc_scheme ON tls224_appln_cpc (cpc_scheme);
 ")
 
-##### 18 tls225_docdb_fam_cpc
-# # TOD
-
 ##### tls226_person_orig
 dbExecute(con,"
   CREATE INDEX tls226_person_id ON tls226_person_orig (person_id);
@@ -150,6 +163,8 @@ dbExecute(con, "
   CREATE INDEX tls801_ctry_code ON tls801_country (ctry_code);
 ")
 
+##### tls801_country
+# None necessary
 
 ##### tls803_legal_event_code
 # Does not work yet, so no indexing for now
@@ -170,23 +185,22 @@ dbExecute(con, "
 ##### tls904_nuts
 # None necessary
 
-# ##### tls906_person
-# # Note: Not used anymore
-# dbExecute(con, "
-#   CREATE INDEX tls906_person_address ON tls906_person (person_address);
-#   CREATE INDEX tls906_person_ctry_code ON tls906_person (person_ctry_code);
-#   CREATE INDEX tls906_nuts ON tls906_person (nuts);
-#   CREATE INDEX tls906_nuts_level ON tls906_person (nuts_level);
-#   CREATE INDEX tls906_doc_std_name_id ON tls906_person (doc_std_name_id);
-#   CREATE INDEX tls906_doc_std_name ON tls906_person (doc_std_name);
-#   CREATE INDEX tls906_psn_id ON tls906_person (psn_id);
-#   CREATE INDEX tls906_psn_name ON tls906_person (psn_name);
-#   CREATE INDEX tls906_psn_level ON tls906_person (psn_level);
-#   CREATE INDEX tls906_psn_sector ON tls906_person (psn_sector);
-#   CREATE INDEX tls906_han_id ON tls906_person (han_id);
-#   CREATE INDEX tls906_han_name ON tls906_person (han_name);
-#   CREATE INDEX tls906_han_harmonized ON tls906_person (han_harmonized);
-# ")
+##### tls906_person
+dbExecute(con, "
+  CREATE INDEX tls906_person_address ON tls906_person (person_address);
+  CREATE INDEX tls906_person_ctry_code ON tls906_person (person_ctry_code);
+  CREATE INDEX tls906_nuts ON tls906_person (nuts);
+  CREATE INDEX tls906_nuts_level ON tls906_person (nuts_level);
+  CREATE INDEX tls906_doc_std_name_id ON tls906_person (doc_std_name_id);
+  CREATE INDEX tls906_doc_std_name ON tls906_person (doc_std_name);
+  CREATE INDEX tls906_psn_id ON tls906_person (psn_id);
+  CREATE INDEX tls906_psn_name ON tls906_person (psn_name);
+  CREATE INDEX tls906_psn_level ON tls906_person (psn_level);
+  CREATE INDEX tls906_psn_sector ON tls906_person (psn_sector);
+  CREATE INDEX tls906_han_id ON tls906_person (han_id);
+  CREATE INDEX tls906_han_name ON tls906_person (han_name);
+  CREATE INDEX tls906_han_harmonized ON tls906_person (han_harmonized);
+")
 
 ##############################################################################
 # tsvector word index for fulltext search (optional, takes quite some time.)

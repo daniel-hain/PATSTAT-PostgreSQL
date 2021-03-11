@@ -81,20 +81,14 @@ dbExecute(con, "
 CREATE TABLE tls206_person (
   person_id int NOT NULL DEFAULT ('0'),
   person_name varchar(500) DEFAULT (''),
-  person_name_orig_lg varchar(500) DEFAULT (''),  
   person_address varchar(1000) DEFAULT (''),
   person_ctry_code char(2) DEFAULT (''),
-  nuts varchar(5) DEFAULT '',
- 	nuts_level smallint DEFAULT ('9'),
   doc_std_name_id int DEFAULT ('0'),
   doc_std_name varchar(500) DEFAULT (''),
   psn_id int DEFAULT ('0'),
   psn_name varchar(500) DEFAULT (''),
   psn_level smallint DEFAULT ('0'),
   psn_sector varchar(50) DEFAULT (''),
-  han_id int DEFAULT ('0'),
- 	han_name varchar(500) DEFAULT (''),
- 	han_harmonized int DEFAULT ('0'),
   PRIMARY KEY (person_id)
 );"
 )
@@ -201,8 +195,7 @@ CREATE TABLE tls215_citn_categ (
 	pat_publn_id int NOT NULL DEFAULT ('0'),
 	citn_replenished int NOT NULL DEFAULT ('0'),
 	citn_id smallint NOT NULL DEFAULT ('0'),
-	citn_categ char(1) NOT NULL DEFAULT (''),   
-	relevant_claim smallint NOT NULL DEFAULT ('0'),
+	citn_categ char(1) NOT NULL DEFAULT (''),           
   PRIMARY KEY (pat_publn_id, citn_replenished, citn_id, citn_categ)
 );" 
 ) 
@@ -250,25 +243,7 @@ CREATE TABLE tls224_appln_cpc (
 );" 
 ) 
 
-##### 18 tls225_docdb_fam_cpc
-# Due to a change practise of the EPO and USPTO, CPC classification symbols are not assigned any more to applications, but to DOCDB families.  he new table TLS225_DOCDB_FAM_CPC reflects this. 
-# It also contains information previously not available. The existing table TLS224_APPLN_CPC with its most relevant attributes is redundantly kept for downward compatibility.
-dbExecute(con,"
-CREATE TABLE tls225_docdb_fam_cpc (
-	docdb_family_id int NOT NULL DEFAULT ('0'),
-	cpc_class_symbol varchar(19) NOT NULL DEFAULT (''),
-	cpc_gener_auth char(2) DEFAULT (''),  
-	cpc_version date DEFAULT ('9999-12-31'),
-	cpc_position char(1) DEFAULT (''),
-	cpc_value char(1) DEFAULT (''),
-	cpc_action_date date DEFAULT ('9999-12-31'),
-	cpc_status char(20) DEFAULT (''),
-	cpc_data_source char(20) DEFAULT (''),
-  PRIMARY KEY (appln_id, cpc_class_symbol, cpc_gener_auth)
-);" 
-) 
-
-##### 19 	tls226_person_orig
+##### 18 	tls226_person_orig
 dbExecute(con,"
 CREATE TABLE tls226_person_orig (
 	person_orig_id int NOT NULL DEFAULT ('0'),
@@ -276,7 +251,6 @@ CREATE TABLE tls226_person_orig (
 	source char(5) DEFAULT (''),
 	source_version varchar(10) DEFAULT (''),
 	name_freeform varchar(500) DEFAULT (''),
-	person_name_orig_lg varchar(500) DEFAULT (''),  
 	last_name varchar(500) DEFAULT (''),
 	first_name varchar(500) DEFAULT (''),
 	middle_name varchar(500) DEFAULT (''),
@@ -297,7 +271,7 @@ CREATE TABLE tls226_person_orig (
 );" 
 ) 
 
-##### 20 tls227_pers_publn
+##### 19 tls227_pers_publn
 dbExecute(con,"
 CREATE TABLE tls227_pers_publn (
 	person_id int NOT NULL DEFAULT ('0'),
@@ -308,7 +282,7 @@ CREATE TABLE tls227_pers_publn (
 );" 
 ) 
 
-##### 21 	tls228_docdb_fam_citn
+##### 20 	tls228_docdb_fam_citn
 dbExecute(con,"
 CREATE TABLE tls228_docdb_fam_citn (
 	docdb_family_id int NOT NULL DEFAULT ('0'),
@@ -317,7 +291,7 @@ CREATE TABLE tls228_docdb_fam_citn (
 );" 
 ) 
 
-##### 22 tls229_appln_nace2	
+##### 21 tls229_appln_nace2	
 dbExecute(con,"
 CREATE TABLE tls229_appln_nace2 (
 	appln_id int NOT NULL DEFAULT ('0'),
@@ -327,7 +301,7 @@ CREATE TABLE tls229_appln_nace2 (
 );" 
 ) 
 
-##### 23  tls230_appln_techn_field
+##### 22  tls230_appln_techn_field
 dbExecute(con,"
 CREATE TABLE tls230_appln_techn_field (
 	appln_id int NOT NULL DEFAULT ('0'),
@@ -337,7 +311,7 @@ CREATE TABLE tls230_appln_techn_field (
 );" 
 ) 
 
-##### 24 tls231_inpadoc_legal_event
+##### 23 tls231_inpadoc_legal_event
 dbExecute(con,"
 CREATE TABLE tls231_inpadoc_legal_event (
 	event_id int NOT NULL DEFAULT '0',
@@ -383,13 +357,13 @@ CREATE TABLE tls231_inpadoc_legal_event (
 ) 
 
 
-##### 25 tls801_country
+##### 24 tls801_country
 dbExecute(con,"
 CREATE TABLE tls801_country (
 	ctry_code char(2) NOT NULL DEFAULT (''),
 	iso_alpha3 char(3) DEFAULT (''),
 	st3_name varchar(100) DEFAULT (''),
-	organisation_flag char(1) DEFAULT (''),
+	state_indicator char(1) DEFAULT (''),
 	continent varchar(25) DEFAULT (''),
 	eu_member char(1) DEFAULT (''),
 	epo_member char(1) DEFAULT (''),
@@ -399,7 +373,7 @@ CREATE TABLE tls801_country (
 );" 
 ) 
 
-##### 26 	tls803_legal_event_code
+##### 25 	tls803_legal_event_code
 dbExecute(con,"
 CREATE TABLE tls803_legal_event_code (
 	event_auth char(2) NOT NULL DEFAULT (''),
@@ -413,7 +387,7 @@ CREATE TABLE tls803_legal_event_code (
 );" 
 ) 
 
-##### 27 tls901_techn_field_ipc
+##### 26 tls901_techn_field_ipc
 dbExecute(con,"
 CREATE TABLE tls901_techn_field_ipc (
 	ipc_maingroup_symbol varchar(8) NOT NULL DEFAULT (''),
@@ -424,7 +398,7 @@ CREATE TABLE tls901_techn_field_ipc (
 );" 
 ) 
 
-##### 28 tls902_ipc_nace2
+##### 27 tls902_ipc_nace2
 dbExecute(con,"
 CREATE TABLE tls902_ipc_nace2 (
 	ipc varchar(8) NOT NULL DEFAULT (''),
@@ -437,7 +411,7 @@ CREATE TABLE tls902_ipc_nace2 (
 );" 
 ) 
 
-##### 29 tls904_nuts
+##### 28 tls904_nuts
 dbExecute(con,"
 CREATE TABLE tls904_nuts (
 	nuts varchar(5) NOT NULL DEFAULT (''),
@@ -447,25 +421,24 @@ CREATE TABLE tls904_nuts (
 );" 
 ) 
 
-# ##### 30 tls906_person
-# # NOTE: HAs been deleted for 2020 version
-# dbExecute(con,"
-# CREATE TABLE tls906_person (
-# 	person_id int NOT NULL DEFAULT ('0'),
-# 	person_name varchar(500) DEFAULT (''),
-# 	person_address varchar(1000) DEFAULT (''),
-# 	person_ctry_code char(2) DEFAULT (''),
-# 	nuts varchar(5) DEFAULT '',
-# 	nuts_level smallint DEFAULT ('9'),
-# 	doc_std_name_id int DEFAULT ('0'),
-# 	doc_std_name varchar(500) DEFAULT (''),
-# 	psn_id int DEFAULT ('0'),
-# 	psn_name varchar(500) DEFAULT (''),
-# 	psn_level smallint DEFAULT ('0'),
-# 	psn_sector varchar(50) DEFAULT (''),
-# 	han_id int DEFAULT ('0'),
-# 	han_name varchar(500) DEFAULT (''),
-# 	han_harmonized int DEFAULT ('0'),
-#   PRIMARY KEY (person_id)
-# );" 
-# ) 
+##### 29 tls906_person
+dbExecute(con,"
+CREATE TABLE tls906_person (
+	person_id int NOT NULL DEFAULT ('0'),
+	person_name varchar(500) DEFAULT (''),
+	person_address varchar(1000) DEFAULT (''),
+	person_ctry_code char(2) DEFAULT (''),
+	nuts varchar(5) DEFAULT '',
+	nuts_level smallint DEFAULT ('9'),
+	doc_std_name_id int DEFAULT ('0'),
+	doc_std_name varchar(500) DEFAULT (''),
+	psn_id int DEFAULT ('0'),
+	psn_name varchar(500) DEFAULT (''),
+	psn_level smallint DEFAULT ('0'),
+	psn_sector varchar(50) DEFAULT (''),
+	han_id int DEFAULT ('0'),
+	han_name varchar(500) DEFAULT (''),
+	han_harmonized int DEFAULT ('0'),
+  PRIMARY KEY (person_id)
+);" 
+) 

@@ -1,45 +1,32 @@
 ### Patstat_to_PostgreSQL: loads a series of zip files into PostgreSQL
 Patstat_to_PostgreSQL <- function(files, 
-                                  tb_pat, 
-                                  tb_own, 
+                                  file_list,
                                   db,
                                   append = TRUE,
                                   overwrite = FALSE){
   
   # First check if everything is fine with input
-  tb_pat %<>% pull()
-  tb_own  %<>% pull()
+  path <- file_list %>% pull(path)
+  table_id  <- file_list %>% pull(table_id)
   
-  # Generate table name and subset index
-  tb_name = paste(tb_pat, tb_own, sep = "_")
-  index <- files %>%
-    filter(table_id == tb_pat) %>%
-    pull(data) 
 
   print(paste("=============================================" )  ) 
-  print(paste("Start processing table", tb_name, "with", length(index), "sepperate zip files.", sep = " ") ) 
+  print(paste("Start processing table", tb_name, "with", length( table_id), "sepperate csv files of", sep = " ") ) 
   
-  for(i in 1:length(index)) {
-    path_zip <- paste0(index[i],".zip")
-    path_txt <- paste0(index[i],".txt")
+
     
     # unzip file, load in R, delete unziped file
-    print(paste("Unzipping and loading dataframe", i, "of", length(index), sep = " ") ) 
+    print(paste("Loading dataframe", i, "of", length(index), sep = " ") ) 
     unzip(path_zip, files = path_txt)
-    x <- fread(path_txt, 
-               header = TRUE, 
-               sep = ",", 
-#               dec = ".",
-#               quote="",
-#               check.names = FALSE
-               encoding = "UTF-8", 
-               data.table = FALSE, 
-               stringsAsFactors = FALSE, 
-               na.strings = NULL, 
-               logical01 = FALSE, 
-               strip.white = FALSE, 
-               fill = FALSE, 
-               blank.lines.skip = FALSE
+    x <- read_csv(
+                 file = paste0(file_list[i, 'path']),
+                 col_names = TRUE,
+                 na = c('', ' ', 'NA', 'XX', '9999-12-31', '9999'),
+                 quoted_na = TRUE,
+                 trim_ws = TRUE,
+                 guess_max = 1000000,
+                 progress = TRUE,
+                 skip_empty_rows = TRUE
                )
     file.remove(path_txt)
     
