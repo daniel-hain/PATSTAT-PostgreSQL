@@ -43,7 +43,8 @@ for(i in 1:nrow(table_names_select) ) {
 # dbRemoveTable(con, "tls906_person")
 #
 # # To delete all tables
-# rem <- dbListTables(con); for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
+# 
+#rem <- dbListTables(con); rem <- rem[rem != 'users']; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
 
 ##############################################################################
 # Inspect

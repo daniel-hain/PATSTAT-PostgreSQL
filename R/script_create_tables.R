@@ -6,9 +6,9 @@
 ##### 1 tls201_appln
 dbExecute(con, "
 CREATE TABLE tls201_appln (
-  appln_id int NOT NULL DEFAULT ('0'),
+  appln_id int NOT NULL DEFAULT ('0'), 
   appln_auth char(2) DEFAULT (''),
-  appln_nr varchar(15)  NOT NULL DEFAULT (''),
+  appln_nr varchar(15)  DEFAULT (''),
   appln_kind char(2) DEFAULT ('  '),
   appln_filing_date date DEFAULT ('9999-12-31'),
   appln_filing_year smallint DEFAULT '9999',
@@ -34,9 +34,8 @@ CREATE TABLE tls201_appln (
   nb_applicants smallint DEFAULT '0',
   nb_inventors smallint DEFAULT '0',
   PRIMARY KEY (appln_id) 
-);"
-) 
-   
+);" ) 
+
 ##### 2 tls202_appln_title
 dbExecute(con,"
 CREATE TABLE tls202_appln_title (
@@ -44,8 +43,7 @@ CREATE TABLE tls202_appln_title (
   appln_title_lg char(2) DEFAULT (''),
   appln_title text,
   PRIMARY KEY (appln_id)
-);" 
-) 
+);" ) 
 
 ##### 3 tls203_appln_abstr
 dbExecute(con,"
@@ -54,8 +52,7 @@ CREATE TABLE tls203_appln_abstr (
 	appln_abstract_lg char(2) DEFAULT (''),
 	appln_abstract text DEFAULT (''),
   PRIMARY KEY (appln_id)
-);" 
-) 
+);" ) 
 
 ##### 4 tls204_appln_prior
 dbExecute(con,"
@@ -64,8 +61,7 @@ CREATE TABLE tls204_appln_prior (
 	prior_appln_id int NOT NULL DEFAULT ('0'),
   prior_appln_seq_nr smallint DEFAULT ('0'),
   PRIMARY KEY (appln_id, prior_appln_id)
-);" 
-) 
+);" ) 
 
 ##### 5 tls205_tech_rel
 dbExecute(con,"
@@ -73,8 +69,7 @@ CREATE TABLE tls205_tech_rel (
 	appln_id int NOT NULL DEFAULT ('0'),
 	tech_rel_appln_id int NOT NULL DEFAULT ('0'),
   PRIMARY KEY (appln_id, tech_rel_appln_id)
-);" 
-) 
+);" ) 
 
 ##### 6 tls206_person # Note: Redundant, since all info also in tls906_person
 dbExecute(con, "
@@ -96,8 +91,7 @@ CREATE TABLE tls206_person (
  	han_name varchar(500) DEFAULT (''),
  	han_harmonized int DEFAULT ('0'),
   PRIMARY KEY (person_id)
-);"
-)
+);")
 
 ##### 7 tls207_pers_appln
 dbExecute(con,"
@@ -107,8 +101,7 @@ CREATE TABLE  tls207_pers_appln (
 	applt_seq_nr smallint NOT NULL DEFAULT ('0'),
 	invt_seq_nr smallint NOT NULL DEFAULT ('0'),
   PRIMARY KEY (person_id, appln_id, applt_seq_nr, invt_seq_nr)
-);" 
-) 
+);" ) 
 
 ##### 8 tls209_appln_ipc
 dbExecute(con,"
@@ -121,8 +114,7 @@ CREATE TABLE tls209_appln_ipc (
   ipc_position char(1) DEFAULT (''),
   ipc_gener_auth char(2) DEFAULT (''),
   PRIMARY KEY (appln_id, ipc_class_symbol)
-);" 
-) 
+);" ) 
 
 ##### 9 tls210_appln_n_cls
 dbExecute(con,"
@@ -130,8 +122,7 @@ CREATE TABLE 	tls210_appln_n_cls (
 	appln_id int NOT NULL DEFAULT ('0'),
 	nat_class_symbol varchar(15) NOT NULL DEFAULT (''),
   PRIMARY KEY (appln_id, nat_class_symbol)
-);" 
-) 
+);" ) 
 
 ##### 10 tls211_pat_publn
 dbExecute(con,"
@@ -147,8 +138,7 @@ CREATE TABLE tls211_pat_publn (
 	publn_first_grant char(1) DEFAULT ('N'),
 	publn_claims smallint DEFAULT ('0'),
   PRIMARY KEY (pat_publn_id)
-);" 
-) 
+);" ) 
 
 ##### 11 tls212_citation
 dbExecute(con,"
@@ -164,8 +154,7 @@ CREATE TABLE tls212_citation (
   npl_citn_seq_nr smallint DEFAULT ('0'),
   citn_gener_auth char(2) DEFAULT (''),	
   PRIMARY KEY (pat_publn_id, citn_replenished, citn_id)
-);" 
-) 
+);" ) 
 
 ##### 12 tls214_npl_publn
 dbExecute(con,"
@@ -192,8 +181,7 @@ CREATE TABLE tls214_npl_publn (
 	online_classification varchar(35) DEFAULT (''),
 	online_search_date varchar(8) DEFAULT (''),
   PRIMARY KEY (npl_publn_id)
-);" 
-) # Note: Problems with: NOT NULL
+);" ) # Note: Problems with: NOT NULL
 
 ##### 13	tls215_citn_categ
 dbExecute(con,"
@@ -204,8 +192,7 @@ CREATE TABLE tls215_citn_categ (
 	citn_categ char(1) NOT NULL DEFAULT (''),   
 	relevant_claim smallint NOT NULL DEFAULT ('0'),
   PRIMARY KEY (pat_publn_id, citn_replenished, citn_id, citn_categ)
-);" 
-) 
+);" ) 
 
 ##### 14  tls216_appln_contn
 dbExecute(con,"
@@ -214,8 +201,7 @@ CREATE TABLE tls216_appln_contn (
 	parent_appln_id int NOT NULL DEFAULT ('0'),
 	contn_type char(3) DEFAULT (''),         
   PRIMARY KEY (appln_id, parent_appln_id)
-);" 
-) 
+);" ) 
 
 ##### 15 	tls222_appln_jp_class
 dbExecute(con,"
@@ -224,8 +210,7 @@ CREATE TABLE tls222_appln_jp_class (
 	jp_class_scheme varchar(5) NOT NULL DEFAULT (''),
 	jp_class_symbol varchar(50) NOT NULL DEFAULT (''),       
   PRIMARY KEY (appln_id, jp_class_scheme, jp_class_symbol)
-);" 
-) 
+);" ) 
 
 ##### 16 	tls223_appln_docus
 dbExecute(con,"
@@ -233,8 +218,7 @@ CREATE TABLE tls223_appln_docus (
 	appln_id int NOT NULL DEFAULT ('0'),
 	docus_class_symbol varchar(50) NOT NULL DEFAULT (''),      
   PRIMARY KEY (appln_id, docus_class_symbol)
-);" 
-) 
+);" ) 
 
 ##### 17 tls224_appln_cpc
 dbExecute(con,"
@@ -247,8 +231,7 @@ CREATE TABLE tls224_appln_cpc (
 	cpc_position char(1) DEFAULT (''),
 	cpc_gener_auth char(2) DEFAULT (''),  
   PRIMARY KEY (appln_id, cpc_class_symbol, cpc_scheme)
-);" 
-) 
+);" ) 
 
 ##### 18 tls225_docdb_fam_cpc
 # Due to a change practise of the EPO and USPTO, CPC classification symbols are not assigned any more to applications, but to DOCDB families.  he new table TLS225_DOCDB_FAM_CPC reflects this. 
@@ -264,9 +247,8 @@ CREATE TABLE tls225_docdb_fam_cpc (
 	cpc_action_date date DEFAULT ('9999-12-31'),
 	cpc_status char(20) DEFAULT (''),
 	cpc_data_source char(20) DEFAULT (''),
-  PRIMARY KEY (appln_id, cpc_class_symbol, cpc_gener_auth)
-);" 
-) 
+  PRIMARY KEY (docdb_family_id, cpc_class_symbol, cpc_gener_auth)
+);" ) 
 
 ##### 19 	tls226_person_orig
 dbExecute(con,"
@@ -294,8 +276,7 @@ CREATE TABLE tls226_person_orig (
 	residence_ctry_code char(2) DEFAULT (''),
 	role varchar(2) DEFAULT (''),
   PRIMARY KEY (person_orig_id)
-);" 
-) 
+);" ) 
 
 ##### 20 tls227_pers_publn
 dbExecute(con,"
@@ -305,8 +286,7 @@ CREATE TABLE tls227_pers_publn (
 	applt_seq_nr smallint NOT NULL DEFAULT ('0'),
 	invt_seq_nr smallint NOT NULL DEFAULT ('0'),
   PRIMARY KEY (person_id, pat_publn_id, applt_seq_nr, invt_seq_nr)
-);" 
-) 
+);" ) 
 
 ##### 21 	tls228_docdb_fam_citn
 dbExecute(con,"
@@ -314,8 +294,7 @@ CREATE TABLE tls228_docdb_fam_citn (
 	docdb_family_id int NOT NULL DEFAULT ('0'),
 	cited_docdb_family_id int NOT NULL DEFAULT ('0'),
   PRIMARY KEY (docdb_family_id, cited_docdb_family_id)
-);" 
-) 
+);" ) 
 
 ##### 22 tls229_appln_nace2	
 dbExecute(con,"
@@ -324,8 +303,7 @@ CREATE TABLE tls229_appln_nace2 (
 	nace2_code varchar(5) NOT NULL DEFAULT (''),
 	weight real DEFAULT (1),	
   PRIMARY KEY (appln_id, nace2_code)
-);" 
-) 
+);" ) 
 
 ##### 23  tls230_appln_techn_field
 dbExecute(con,"
@@ -334,8 +312,7 @@ CREATE TABLE tls230_appln_techn_field (
 	techn_field_nr smallint NOT NULL DEFAULT ('0'),
   weight real DEFAULT (1),
   PRIMARY KEY (appln_id, techn_field_nr)
-);" 
-) 
+);" ) 
 
 ##### 24 tls231_inpadoc_legal_event
 dbExecute(con,"
@@ -379,8 +356,7 @@ CREATE TABLE tls231_inpadoc_legal_event (
   class_scheme varchar(4) DEFAULT (''),
   class_symbol varchar(50) DEFAULT (''),
   PRIMARY KEY (event_id)
-);" 
-) 
+);" ) 
 
 
 ##### 25 tls801_country
@@ -396,8 +372,7 @@ CREATE TABLE tls801_country (
 	oecd_member char(1) DEFAULT (''),
 	discontinued char(1) DEFAULT (''),
   PRIMARY KEY (ctry_code)
-);" 
-) 
+);" ) 
 
 ##### 26 	tls803_legal_event_code
 dbExecute(con,"
@@ -410,8 +385,7 @@ CREATE TABLE tls803_legal_event_code (
 	event_category_code char(1) DEFAULT (''),
 	event_category_title varchar(100) DEFAULT (''),
   PRIMARY KEY (event_auth, event_code)
-);" 
-) 
+);" ) 
 
 ##### 27 tls901_techn_field_ipc
 dbExecute(con,"
@@ -421,8 +395,7 @@ CREATE TABLE tls901_techn_field_ipc (
   techn_sector varchar(50) DEFAULT (''),
   techn_field varchar(50) DEFAULT (''),
   PRIMARY KEY (ipc_maingroup_symbol)
-);" 
-) 
+);" ) 
 
 ##### 28 tls902_ipc_nace2
 dbExecute(con,"
@@ -434,8 +407,7 @@ CREATE TABLE tls902_ipc_nace2 (
 	nace2_weight smallint DEFAULT (1),
 	nace2_descr varchar(150) DEFAULT (''),
   PRIMARY KEY (ipc, not_with_ipc, unless_with_ipc, nace2_code)
-);" 
-) 
+);" ) 
 
 ##### 29 tls904_nuts
 dbExecute(con,"
@@ -444,8 +416,7 @@ CREATE TABLE tls904_nuts (
 	nuts_level smallint DEFAULT ('0'),
 	nuts_label varchar(250) DEFAULT (''),
   PRIMARY KEY (nuts)
-);" 
-) 
+);" ) 
 
 # ##### 30 tls906_person
 # # NOTE: HAs been deleted for 2020 version

@@ -5,9 +5,6 @@ output: html_notebook
 
 # Setup
 
-
-
-
 ```{r}
 # Not sure if necessary... was an issue with a version conflict... try new version in the future again...
 # devtools::install_version("RPostgres", version = "1.2.1", repos = "http://cran.us.r-project.org")
@@ -27,7 +24,6 @@ graphics.off()
 # Standard
 library(tidyverse) # General DS toolkit
 library(magrittr) # For advanced piping
-library(data.table) # for fast fread and other fast data transformations
 
 # Databases
 library(DBI) # GEneral R database interface
@@ -37,7 +33,7 @@ library(dbplyr) # for dplyr with databases
 
 ```{r}
 # Outsourced in this script
-source("000_define_functions.R")
+source("R/functions.R")
 ```
 
 # Preamble
@@ -67,6 +63,15 @@ var_password = "INSERT_YOUR_PASSWORD"
 var_folder = "YORUDRIVE/YOURFOLDER"
 ```
 
+... or load a scipt where you define the variables
+
+```{r}
+# LOad script with variables
+source("../variables.R")
+```
+
+
+
 ## Connect to database
 
 We now establish a connection to the database.
@@ -78,7 +83,7 @@ con <- dbConnect(drv = RPostgres::Postgres(),
                  host = var_host, 
                  port = var_port,
                  user = var_user, 
-                 password = var_password, 
+                 password = var_password,
                  sslmode = 'require'
                  )
 ```
@@ -89,102 +94,173 @@ con %>% dbListTables() %>% sort()
 ```
 
 
-
 ## Load adittional data: 
 
 ```{r}
+# Overview of PATSTAT tables
 table_names <- read_csv("data/PATSTAT_table_description.csv")
 ```
 
 ```{r}
-file_list <- tibble(table_id = NA,
-                    data = list.files(path = var_folder, pattern = "tls.*csv"),
-                    path = paste(var_folder, data, sep = '/')) %>%
-  mutate(data = gsub("\\.csv", "", .$data),
-         table_id = gsub("\\_.*", "", .$data) )
+file_list <- tibble(tbl_id = NA,
+                    tbl_part = list.files(path = var_folder, pattern = "tls.*csv"),
+                    tbl_path = paste(var_folder, tbl_part, sep = '/')) %>%
+  mutate(tbl_part = gsub("\\.csv", "", .$tbl_part),
+         tbl_id = gsub("\\_.*", "", .$tbl_part) ) %>%
+  left_join(table_names, by = c('tbl_id' = 'table_id') ) %>% 
+  mutate(tbl_name = paste(tbl_id, name, sep = '_'))
 ```
 
 
+# Define the tables in Postgres
+
+
+```{r}
+# # To delete all tables
+# rem <- dbListTables(con); rem <- rem[rem != 'users']; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
+
+# # To delete specific tables
+# rem <- dbListTables(con); rem <- rem[rem %in% c('users')]; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
+```
+
+The following outsourced
+
+```{r}
+source("R/script_create_tables.R")
+```
+
+```{r}
+con %>% dbListTables() %>% sort()
+```
+
+
+
+# Populate the Potgres with PATSTAT data
+
+##
+
 ```{r}
 # Select or disselect certain rows
-include_number <- 1:nrow(table_names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
+include_number <- 1:nrow(file_list)
+include_name <- c('tls203') # Indicate by name the tables to include, if you want to exclude some by name
 exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
 ```
 
 
 ```{r}
 # subset the table
-table_names_select <- table_names[include_number,] %>% filter(!(table_id %in% exclude_name) )
-rm(include_number, exclude_name)
+tbl_select <- file_list[include_number, ] %>% filter((tbl_id %in% include_name) & !(tbl_id %in% exclude_name))
+rm(include_name, exclude_name)
 ```
 
 
+##
+
+
+```{r}
+for(i in 1:nrow(tbl_select) ) {
+  patstat_import_postgre(con = con,
+                         tbl_path = tbl_select[i,] %>% pull(tbl_path),
+                         tbl_name = tbl_select[i,] %>% pull(tbl_name),
+                         append = TRUE,
+                         overwrite = FALSE
+  ) }
+```
 
 
 
 ```{r}
-data <- read_csv(
-  file = paste0(file_list[1, 'path']),
-  col_names = TRUE,
-  na = c('', ' ', 'NA', 'XX', '9999-12-31', '9999'),
-  quoted_na = TRUE,
-  trim_ws = TRUE,
-  guess_max = 1000000,
-  progress = TRUE,
-  skip_empty_rows = TRUE
-)
+tbl(con, 'tls203_appln_abstr') %>% head(100)
 ```
+
 
 
 ```{r}
-data2 <- read_csv(
-  file = 'data/temp/tls201_part02.zip',
-  col_names = TRUE,
-  na = c("", "NA"),
-  quoted_na = TRUE,
-  trim_ws = FALSE,
-  guess_max = 5000,
-  progress = show_progress(),
-  skip_empty_rows = TRUE
-)
-```
 
 
-##############################################################################
-# Load to PostgreSQ
-##############################################################################
 
-# Select or disselect certain rows
-include_number <- 1:nrow(table.names) # Indicate by number the tables to include (all = 1:nrow(table.names) )
-exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
-# subset the table
-table_names_select <- table_names[include_number,] %>% filter(!(table_id %in% exclude_name) )
+
 
 # This loop imports all tables to the PostgreSQL database. You can instead also run the function sepperate for the tables
-for(i in 1:nrow(table_names_select) ) {
-  Patstat_to_PostgreSQL(files = file_list, 
-                        db = con,
+for(i in 1:nrow(table_select) ) {
+  Patstat_to_PostgreSQL(con = con,
+                        tbl = table_select[i,],
                         append = TRUE,
-                        overwrite = FALSE,
-                        tb_pat = table_names_select[i, "table_id"],
-                        tb_own = table_names_select[i, "name"]
+                        overwrite = FALSE
                         )
 }
+```
 
-  # First check if everything is fine with input
-  tb_pat %<>% pull()
-  tb_own  %<>% pull()
+
+
+
+
+
+
+
+
+
+
+```{r}
+f <- function(gear_val) {
+  function(x, pos) {
+    dplyr::filter(x, .data[["gear"]] == gear_val)
+  }
+}
+
+readr::read_csv_chunked(
+  readr::readr_example("mtcars.csv"),
+  readr::DataFrameCallback$new(f(gear_val = 3)),
+  chunk_size = 5
+)
+```
+
+
+
+
+
+
+
+
   
-  # Generate table name and subset index
-  tb_name = paste(tb_pat, tb_own, sep = "_")
-  index <- files %>%
-    filter(table_id == tb_pat) %>%
-    pull(data) 
-    
-  
 
 
 
+
+### Count rows
+
+# TODO
+
+##############################################################################
+# Indexing
+##############################################################################
+
+# Outsourced in this script: You however might want to run it one by one
+# Warning: This takes some hours...
+source("000_create_index.R")
+
+##############################################################################
+# Create Foreign Key
+##############################################################################
+
+# Outsourced in this script: You however might want to run it one by one
+source("000_create_foreign_key.R")
+
+##############################################################################
+# Clustering
+##############################################################################
+
+# Outsourced in this script: You however might want to run it one by one
+# source("000_clustering.R")
+# Note: Not done yet...
+
+
+##############################################################################
+# Disconnect
+##############################################################################
+
+dbDisconnect(con)
+dbUnloadDriver(drv)
 
 
 
