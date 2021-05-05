@@ -1,30 +1,31 @@
-table_id,name,description
-tls201,appln,application 
-tls202,appln_title,application title 
-tls203,appln_abstr,application abstract 
-tls204,appln_prior,paris convention priority 
-tls205,tech_rel,technical relation 
-tls206,person,person 
-tls207,pers_appln,link between person and application 
-tls209,appln_ipc,international patent classification 
-tls210,appln_n_cls,national classification 
-tls211,pat_publn,patent publication 
-tls212,citation,citation 
-tls214,npl_publn,non patent literature publication 
-tls215,citn_categ,citation category 
-tls216,appln_contn,application continuation 
-tls222,appln_jp_class,japanese classification 
-tls223,appln_docus,us classification 
-tls224,appln_cpc,cooperative patent classification 
-tls226,person_orig,unmodified person data 
-tls227,pers_publn,link between person and publication 
-tls228,docdb_fam_citn,citation between docdb families 
-tls229,appln_nace2,nace2 industry classification 
-tls230,appln_techn_field,classification by technical field 
-tls231,inpadoc_legal_event,legal event 
-tls801,country,reference table of country codes 
-tls803,legal_event_code,reference table of legal event codes 
-tls901,techn_field_ipc,mapping between technology fields and ipc 
-tls902,ipc_nace2,mapping between ipc and industrial sectors 
-tls904,nuts,nuts regional codes 
-tls906,person,person 
+﻿table_id;name;description
+tls201;appln;application 
+tls202;appln_title;application title 
+tls203;appln_abstr;application abstract 
+tls204;appln_prior;paris convention priority 
+tls205;tech_rel;technical relation 
+tls206;person;person 
+tls207;pers_appln;link between person and application 
+tls209;appln_ipc;international patent classification 
+tls210;appln_n_cls;national classification 
+tls211;pat_publn;patent publication 
+tls212;citation;citation 
+tls214;npl_publn;non patent literature publication 
+tls215;citn_categ;citation category 
+tls216;appln_contn;application continuation 
+tls222;appln_jp_class;japanese classification 
+tls223;appln_docus;us classification 
+tls224;appln_cpc;cooperative patent classification 
+tls225;docdb_fam_cpc;DOCDB family CPC
+tls226;person_orig;unmodified person data 
+tls227;pers_publn;link between person and publication 
+tls228;docdb_fam_citn;citation between docdb families 
+tls229;appln_nace2;nace2 industry classification 
+tls230;appln_techn_field;classification by technical field 
+tls231;inpadoc_legal_event;legal event 
+tls801;country;reference table of country codes 
+tls803;legal_event_code;reference table of legal event codes 
+tls901;techn_field_ipc;mapping between technology fields and ipc 
+tls902;ipc_nace2;mapping between ipc and industrial sectors 
+tls904;nuts;nuts regional codes 
+tls906;person;person 

@@ -98,7 +98,7 @@ con %>% dbListTables() %>% sort()
 
 ```{r}
 # Overview of PATSTAT tables
-table_names <- read_csv("data/PATSTAT_table_description.csv")
+table_names <- read_csv2("data/PATSTAT_table_description.csv")
 ```
 
 ```{r}
@@ -120,13 +120,14 @@ file_list <- tibble(tbl_id = NA,
 # rem <- dbListTables(con); rem <- rem[rem != 'users']; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
 
 # # To delete specific tables
-# rem <- dbListTables(con); rem <- rem[rem %in% c('users')]; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
+# dbRemoveTable(con, "tls206_person")
 ```
 
 The following outsourced
 
 ```{r}
-source("R/script_create_tables.R")
+# # To create all tables. If you only want to create a single table, select that one
+# source("R/script_create_tables.R")
 ```
 
 ```{r}
@@ -142,7 +143,7 @@ con %>% dbListTables() %>% sort()
 ```{r}
 # Select or disselect certain rows
 include_number <- 1:nrow(file_list)
-include_name <- c('tls203') # Indicate by name the tables to include, if you want to exclude some by name
+include_name <- c('tls206') # Indicate by name the tables to include, if you want to exclude some by name
 exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
 ```
 
@@ -150,7 +151,7 @@ exclude_name <- c() # Indicate by name the tables to exclude, if you want to exc
 ```{r}
 # subset the table
 tbl_select <- file_list[include_number, ] %>% filter((tbl_id %in% include_name) & !(tbl_id %in% exclude_name))
-rm(include_name, exclude_name)
+rm(include_name, exclude_name, include_number)
 ```
 
 
@@ -167,65 +168,30 @@ for(i in 1:nrow(tbl_select) ) {
   ) }
 ```
 
-
-
-```{r}
-tbl(con, 'tls203_appln_abstr') %>% head(100)
-```
-
-
-
-```{r}
-
-
-
-
-
-# This loop imports all tables to the PostgreSQL database. You can instead also run the function sepperate for the tables
-for(i in 1:nrow(table_select) ) {
-  Patstat_to_PostgreSQL(con = con,
-                        tbl = table_select[i,],
-                        append = TRUE,
-                        overwrite = FALSE
-                        )
-}
-```
-
-
-
-
-
-
-
-
-
-
+<!---
+Errors to solve
+!!! "tls206_person" ERROR:  null value in column "person_id" violates not-null constraint
+!!! "tls210_appln_n_cls" ERROR:
+!!! "tls214_npl_publn" RROR:  null value in column "npl_publn_i
+!!! "tls215_citn_categ"" ERROR:  duplicate key value violates unique constraint "tls215_citn_categ_pkey"
+!!! "tls227_pers_publn" ERROR:  null value in column "invt_seq_nr" violates not-null constraint
+!!! "tls228_docdb_fam_citn" ERROR:  null value in column "cited_docdb_family_id" violates not-null constraint
+!!! "tls230_appln_techn_field" ERROR:  null value in column "appln_id" violates not-null constraint
+!!! "tls231_inpadoc_legal_event" Error: COPY returned error: ERROR:  null value in column "appln_id" violates not-null constraint
+!!! "tls801_country" ERROR:  null value in column "ctry_code" violates not-null constraint
+!!! "tls803_legal_event_code"  ERROR:  null value in column "event_code" violates not-null constraint
+!!! "tls902_ipc_nace2" ERROR:  value too long for type character varying(5) CONTEXT:  COPY tls902_ipc_nace2, line 1, column nace2_code: "28.300000000000001
+!!! "tls902_ipc_nace2"  ERROR:  value too long for type character varying(5) CONTEXT:  COPY tls902_ipc_nace2, line 1, column nace2_code: "28.300000000000001"
+--->
 
 ```{r}
-f <- function(gear_val) {
-  function(x, pos) {
-    dplyr::filter(x, .data[["gear"]] == gear_val)
-  }
-}
-
-readr::read_csv_chunked(
-  readr::readr_example("mtcars.csv"),
-  readr::DataFrameCallback$new(f(gear_val = 3)),
-  chunk_size = 5
-)
+tbl(con, "tls206_person") %>% head(100)
 ```
-
-
-
-
 
 
 
 
   
-
-
-
 
 ### Count rows
 
