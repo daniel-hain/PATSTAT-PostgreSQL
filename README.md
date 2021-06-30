@@ -1,5 +1,5 @@
 # PATSTAT-PostgreSQL
-A collection of R scripts to import PATSTAT (Autumn version 2018) into a PostgreSQL database, set up indicies and foreign keys, and create some summary statistics and auxiliary variables.
+A collection of R scripts to import PATSTAT (Autumn version 2020) into a PostgreSQL database, set up indicies and foreign keys, and create some summary statistics and auxiliary variables.
 
 ## How it works:
 1. First, set up a PosttGreSQL server ([check here for instructions](https://www.postgresql.org/docs/10/runtime.html))
