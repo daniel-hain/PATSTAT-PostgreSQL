@@ -189,9 +189,9 @@ CREATE TABLE tls215_citn_categ (
 	pat_publn_id int NOT NULL DEFAULT ('0'),
 	citn_replenished int NOT NULL DEFAULT ('0'),
 	citn_id smallint NOT NULL DEFAULT ('0'),
-	citn_categ char(2) NOT NULL DEFAULT (''),   
+	citn_categ char(10) NOT NULL DEFAULT (''),   
 	relevant_claim smallint NOT NULL DEFAULT ('0'),
-  PRIMARY KEY (pat_publn_id, citn_replenished, citn_id, citn_categ)
+  PRIMARY KEY (pat_publn_id, citn_replenished, citn_id, citn_categ, relevant_claim)
 );" ) 
 
 ##### 14  tls216_appln_contn

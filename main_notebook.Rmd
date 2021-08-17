@@ -88,11 +88,6 @@ con <- dbConnect(drv = RPostgres::Postgres(),
                  )
 ```
 
-```{r}
-# Inspect DB:
-con %>% dbListTables() %>% sort()
-```
-
 
 ## Load adittional data: 
 
@@ -114,13 +109,16 @@ file_list <- tibble(tbl_id = NA,
 
 # Define the tables in Postgres
 
+```{r}
+con %>% dbListTables() %>% sort()
+```
 
 ```{r}
 # # To delete all tables
 # rem <- dbListTables(con); rem <- rem[rem != 'users']; for(i in 1:length(rem )){dbRemoveTable(con, rem[i])}; rm(rem)
 
 # # To delete specific tables
-# dbRemoveTable(con, "tls206_person")
+# dbRemoveTable(con, "tls902_ipc_nace2")
 ```
 
 The following outsourced
@@ -130,12 +128,6 @@ The following outsourced
 # source("R/script_create_tables.R")
 ```
 
-```{r}
-con %>% dbListTables() %>% sort()
-```
-
-
-
 # Populate the Potgres with PATSTAT data
 
 ##
@@ -143,7 +135,7 @@ con %>% dbListTables() %>% sort()
 ```{r}
 # Select or disselect certain rows
 include_number <- 1:nrow(file_list)
-include_name <- c('tls206') # Indicate by name the tables to include, if you want to exclude some by name
+include_name <- c('tls902') # Indicate by name the tables to include, if you want to exclude some by name
 exclude_name <- c() # Indicate by name the tables to exclude, if you want to exclude some by name
 ```
 
@@ -155,7 +147,7 @@ rm(include_name, exclude_name, include_number)
 ```
 
 
-##
+## Execute
 
 
 ```{r}
@@ -171,17 +163,9 @@ for(i in 1:nrow(tbl_select) ) {
 <!---
 Errors to solve
 !!! "tls206_person" ERROR:  null value in column "person_id" violates not-null constraint
-!!! "tls210_appln_n_cls" ERROR:
-!!! "tls214_npl_publn" RROR:  null value in column "npl_publn_i
-!!! "tls215_citn_categ"" ERROR:  duplicate key value violates unique constraint "tls215_citn_categ_pkey"
-!!! "tls227_pers_publn" ERROR:  null value in column "invt_seq_nr" violates not-null constraint
-!!! "tls228_docdb_fam_citn" ERROR:  null value in column "cited_docdb_family_id" violates not-null constraint
-!!! "tls230_appln_techn_field" ERROR:  null value in column "appln_id" violates not-null constraint
-!!! "tls231_inpadoc_legal_event" Error: COPY returned error: ERROR:  null value in column "appln_id" violates not-null constraint
-!!! "tls801_country" ERROR:  null value in column "ctry_code" violates not-null constraint
-!!! "tls803_legal_event_code"  ERROR:  null value in column "event_code" violates not-null constraint
-!!! "tls902_ipc_nace2" ERROR:  value too long for type character varying(5) CONTEXT:  COPY tls902_ipc_nace2, line 1, column nace2_code: "28.300000000000001
-!!! "tls902_ipc_nace2"  ERROR:  value too long for type character varying(5) CONTEXT:  COPY tls902_ipc_nace2, line 1, column nace2_code: "28.300000000000001"
+!!! "tls214_npl_publn" ERROR:  null value in column "npl_publn_id" violates not-null constraint DETAIL:  Failing row contains (null, null, null, ... (Happens at the end)
+# 
+!!! "tls231_inpadoc_legal_event"  ERROR:  duplicate key value violates unique constraint "tls230_appln_techn_field_pkey"
 --->
 
 ```{r}

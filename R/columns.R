@@ -86,6 +86,13 @@ cols_tls207_pers_appln <- cols(
 
 ###
 
+cols_tls210_appln_n_cls <- cols(
+  appln_id = col_double(),
+  nat_class_symbol = col_character()
+)
+
+###
+
 cols_tls212_citation <- cols(
   pat_publn_id = col_double(),
   citn_replenished = col_double(),
@@ -100,6 +107,16 @@ cols_tls212_citation <- cols(
 )
 
 ### 
+
+cols_tls214_npl_publn <- cols(
+  .default = col_character(),
+  npl_publn_id = col_double(),
+  npl_publn_date = col_double(),
+  npl_publn_end_date = col_double(),
+  online_search_date = col_double()
+)
+
+###
 
 cols_tls215_citn_categ <- cols(
   pat_publn_id = col_double(),
